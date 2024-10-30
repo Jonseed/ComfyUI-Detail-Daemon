@@ -55,7 +55,7 @@ Simple node to multiply all sigmas by the supplied factor (multiplies both the n
 
 ![Screenshot 2024-10-29 124803](https://github.com/tatookan/comfuinoda-Navyblue/blob/main/demo/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20241030163715.png))
 
-A simpler version of Detail Daemon Sampler, with only amount adjustment (-0.05 dishonesty_factor is equivalent of 0.5 in detail_amount of Detail Daemon), start and end values. Dishonesty values between -0.1 and -0.01 work best.
+A simpler version of Detail Daemon Sampler, with only amount adjustment (-0.1 dishonesty_factor is equivalent of 0.1 in detail_amount of Detail Daemon), start and end values. Dishonesty values between -0.1 and -0.01 work best.
 
 ## Example and testing workflow
 
