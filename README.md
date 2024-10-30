@@ -51,9 +51,9 @@ Allows graphing adjusted sigmas to visually see the effects of different paramet
 
 Simple node to multiply all sigmas by the supplied factor (multiplies both the noise levels added and denoised by the factor, which somehow adds detail with a factor less than 1). Factor values of 0.95-0.99 work best (default without this node is 1.0). It is stateless, meaning it calculates the sigmas fresh on every queue (other multiply sigmas nodes seem to calculate on prior run sigmas). Because this multiplies sigmas of all steps (without start or end values), it tends to change the overall composition of the image too.
 
-### Lying Sigma Sampler
+### Advanced Lying Sigma Sampler
 
-![Screenshot 2024-10-29 124803](https://github.com/user-attachments/assets/11c24b49-96e1-4f50-9b82-1d6778c2a8ea)
+![Screenshot 2024-10-29 124803](https://github.com/tatookan/comfuinoda-Navyblue/blob/main/demo/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20241030163715.png))
 
 A simpler version of Detail Daemon Sampler, with only amount adjustment (-0.05 dishonesty_factor is equivalent of 0.5 in detail_amount of Detail Daemon), start and end values. Dishonesty values between -0.1 and -0.01 work best.
 
@@ -63,6 +63,9 @@ A simpler version of Detail Daemon Sampler, with only amount adjustment (-0.05 d
 
 The [Comparing Detailers.json](https://github.com/Jonseed/ComfyUI-Detail-Daemon/blob/main/Comparing%20Detailers.json) workflow will allow you to compare these various detailer nodes on the same prompt and seed.
 
+## Precautions
+Before using this node, ensure that floating point rounding is disabled and comfui is restarted. The value of the adjustment factor dishonesty_factor has a significant impact on the results. It is recommended to start with the default value and gradually adjust it.
+![Screenshot 2024-10-29 124833](https://github.com/tatookan/comfuinoda-Navyblue/blob/main/demo/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20241030164321.png)
 ## Credits
 
 - Detail Daemon concept and schedule generation function from muerrilla: https://github.com/muerrilla/sd-webui-detail-daemon/
