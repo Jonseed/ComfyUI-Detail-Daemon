@@ -422,29 +422,27 @@ class MultiplySigmas:
         sigmas = sigmas.clone()
         return (sigmas * factor,)
 
-#LyingSigmaSampler
-def lying_sigma_sampler(
-    model,
-    x,
-    sigmas,
+#advanced_lying_sigma_sampler
+def advanced_lying_sigma_sampler(
+    model: object,
+    x: torch.Tensor,
+    sigmas: torch.Tensor,
     *,
-    lss_wrapped_sampler,
-    lss_dishonesty_factor,
-    lss_startend_percent,
-    **kwargs,
-):
-    start_percent, end_percent = lss_startend_percent
-    ms = model.inner_model.inner_model.model_sampling
-    start_sigma, end_sigma = (
-        round(ms.percent_to_sigma(start_percent), 4),
-        round(ms.percent_to_sigma(end_percent), 4),
-    )
-    del ms
+    sampler: object,
+    dishonesty_factor: float,
+    start_percent: float,
+    end_percent: float,
+    smooth_factor: float = 0.5,
+    **kwargs: dict,
+) -> torch.Tensor:
+    start_sigma = round(model.inner_model.inner_model.model_sampling.percent_to_sigma(start_percent), 4)
+    end_sigma = round(model.inner_model.inner_model.model_sampling.percent_to_sigma(end_percent), 4)
 
-    def model_wrapper(x, sigma, **extra_args):
+    def model_wrapper(x: torch.Tensor, sigma: torch.Tensor, **extra_args: dict):
         sigma_float = float(sigma.max().detach().cpu())
         if end_sigma <= sigma_float <= start_sigma:
-            sigma = sigma * (1.0 + lss_dishonesty_factor)
+            adjustment = dishonesty_factor * (0.5 * (1 - np.cos(smooth_factor * np.pi)))
+            sigma = sigma * (1.0 + adjustment)
         return model(x, sigma, **extra_args)
 
     for k in (
@@ -453,50 +451,98 @@ def lying_sigma_sampler(
     ):
         if hasattr(model, k):
             setattr(model_wrapper, k, getattr(model, k))
-    return lss_wrapped_sampler.sampler_function(
-        model_wrapper,
-        x,
-        sigmas,
-        **kwargs,
-        **lss_wrapped_sampler.extra_options,
-    )
 
+    # Check if denoise_mask is supported by the sampler function
+    if 'denoise_mask' in inspect.signature(sampler.sampler_function).parameters:
+        return sampler.sampler_function(
+            model_wrapper,
+            x,
+            sigmas,
+            denoise_mask=kwargs.get('denoise_mask'),
+            **kwargs,
+            **sampler.extra_options,
+        )
+    else:
+        return sampler.sampler_function(
+            model_wrapper,
+            x,
+            sigmas,
+            **kwargs,
+            **sampler.extra_options,
+        )
 
-class LyingSigmaSamplerNode:
-    CATEGORY = "sampling/custom_sampling"
+class AdvancedLyingSigmaSamplerNode:
+    DESCRIPTION = "高级sigma控制器，使用前最好关闭float rounding并重启comfui,以达到最佳控制效果|For advanced sigma controllers, it is best to turn off float rounding and restart comfui before use for optimal control."
+    CATEGORY = "sampling/custom_sampling/advanced_samplers"
     RETURN_TYPES = ("SAMPLER",)
-    FUNCTION = "go"
+    FUNCTION = "initialize"
 
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(cls) -> dict:
         return {
             "required": {
                 "sampler": ("SAMPLER",),
                 "dishonesty_factor": (
                     "FLOAT",
                     {
-                        "default": -0.05,
-                        "min": -0.999,
-                        "step": 0.01,
-                        "tooltip": "Multiplier for sigmas passed to the model. -0.05 means we reduce the sigma by 5%.",
-                    },
+                        "default": -0.1,
+                        "min": -1.0,
+                        "max": 1.0,
+                        "step": 0.001,
+                        "tooltip": "默认值-0.1，一般来说这是一个较大值|Default value -0.1, which is generally a larger value."
+                    }
                 ),
-            },
-            "optional": {
-                "start_percent": ("FLOAT", {"default": 0.1, "min": 0.0, "max": 1.0, "step": 0.01}),
-                "end_percent": ("FLOAT", {"default": 0.9, "min": 0.0, "max": 1.0, "step": 0.01}),
-            },
+                "start_percent": (
+                    "FLOAT",
+                    {
+                        "default": 0.1,
+                        "min": 0.0,
+                        "max": 1.0,
+                        "step": 0.01,
+                        "tooltip": "bilibili@深深蓝hana."
+                    }
+                ),
+                "end_percent": (
+                    "FLOAT",
+                    {
+                        "default": 0.9,
+                        "min": 0.0,
+                        "max": 1.0,
+                        "step": 0.01,
+                        "tooltip": "bilibili@深深蓝hana."
+                    }
+                ),
+                "smooth_factor": (
+                    "FLOAT",
+                    {
+                        "default": 0.5,
+                        "min": 0.0,
+                        "max": 1.0,
+                        "step": 0.01,
+                        "tooltip": "bilibili@深深蓝hana."
+                    }
+                ),
+            }
         }
 
     @classmethod
-    def go(cls, sampler, dishonesty_factor, *, start_percent=0.0, end_percent=1.0):
+    def initialize(
+        cls,
+        sampler: object,
+        dishonesty_factor: float,
+        start_percent: float,
+        end_percent: float,
+        smooth_factor: float,
+    ) -> tuple:
         return (
             KSAMPLER(
-                lying_sigma_sampler,
+                advanced_lying_sigma_sampler,
                 extra_options={
-                    "lss_wrapped_sampler": sampler,
-                    "lss_dishonesty_factor": dishonesty_factor,
-                    "lss_startend_percent": (start_percent, end_percent),
+                    "sampler": sampler,
+                    "dishonesty_factor": dishonesty_factor,
+                    "start_percent": start_percent,
+                    "end_percent": end_percent,
+                    "smooth_factor": smooth_factor,
                 },
             ),
         )
