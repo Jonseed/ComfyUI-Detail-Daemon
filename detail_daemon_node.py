@@ -519,7 +519,7 @@ class AdvancedLyingSigmaSamplerNode:
                         "min": 0.0,
                         "max": 1.0,
                         "step": 0.01,
-                        "tooltip": "bilibili@深深蓝hana."
+                        "tooltip": "If you're not sure what you're doing, leave it at default, a reminder from tatookan."
                     }
                 ),
             }
