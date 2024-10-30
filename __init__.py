@@ -6,14 +6,14 @@ NODE_CLASS_MAPPINGS = {
     "DetailDaemonSamplerNode": DetailDaemonSamplerNode,
     "DetailDaemonGraphSigmasNode": DetailDaemonGraphSigmasNode,
     "MultiplySigmas": MultiplySigmas,
-    "AdvancedLyingSigmaSample": AdvancedLyingSigmaSamplerNode，
+    "AdvancedLyingSigmaSamplerNode": AdvancedLyingSigmaSamplerNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "DetailDaemonSamplerNode": "Detail Daemon Sampler",
     "DetailDaemonGraphSigmasNode": "Detail Daemon Graph Sigmas",
     "MultiplySigmas": "Multiply Sigmas (stateless)",
-    "LyingSigmaSampler": "Advanced Lying Sigma Sampler",
+    "AdvancedLyingSigmaSamplerNode": "Advanced Lying Sigma Sampler",
 }
 
 __all__ = ["NODE_CLASS_MAPPINGS"]
