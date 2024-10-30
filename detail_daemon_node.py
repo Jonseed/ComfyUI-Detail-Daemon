@@ -489,7 +489,7 @@ class AdvancedLyingSigmaSamplerNode:
                         "min": -1.0,
                         "max": 1.0,
                         "step": 0.001,
-                        "tooltip": "默认值-0.1，一般来说这是一个较大值|Default value -0.1, which is generally a larger value."
+                        "tooltip": "Default value -0.1, which is generally a larger value|Multiplier for sigmas passed to the model. -0.1 means we reduce the sigma by 10%."
                     }
                 ),
                 "start_percent": (
@@ -499,7 +499,7 @@ class AdvancedLyingSigmaSamplerNode:
                         "min": 0.0,
                         "max": 1.0,
                         "step": 0.01,
-                        "tooltip": "bilibili@深深蓝hana."
+                        "tooltip": "If you're not sure what you're doing, leave it at default, a reminder from tatookan."
                     }
                 ),
                 "end_percent": (
@@ -509,7 +509,7 @@ class AdvancedLyingSigmaSamplerNode:
                         "min": 0.0,
                         "max": 1.0,
                         "step": 0.01,
-                        "tooltip": "bilibili@深深蓝hana."
+                        "tooltip": "If you're not sure what you're doing, leave it at default, a reminder from tatookan."
                     }
                 ),
                 "smooth_factor": (
