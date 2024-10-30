@@ -8,6 +8,33 @@ A port of muerrilla's [sd-webui-Detail-Daemon](https://github.com/muerrilla/sd-w
 - **Multiply Sigmas** (stateless)
 - **Lying Sigma Sampler**
 
+## Demonstration
+### T2M
+FLUX: GGUF-Q6K  
+Sampler: euler  
+Scheduler: beta  
+Steps: 20  
+Denoise: 1  
+
+| ON | OFF |
+|---|---|
+| <img src="https://github.com/tatookan/comfuinoda-Navyblue/blob/main/demo/NO.png" alt="Sampler Example" width="500"> | <img src="https://github.com/tatookan/comfuinoda-Navyblue/blob/main/demo/OFF.png" alt="Sampler Example" width="500"> |
+
+| AMINE-ON | AMINE-OFF |
+|---|---|
+| <img src="https://github.com/tatookan/comfuinoda-Navyblue/blob/main/demo/AMINE2-ON_.png" alt="Sampler Example" width="500"> | <img src="https://github.com/tatookan/comfuinoda-Navyblue/blob/main/demo/AMINE2-OFF.png" alt="Sampler Example" width="500"> |
+
+### M2M
+FLUX: GGUF-Q6K  
+Sampler: euler  
+Scheduler: beta  
+Steps: 20  
+Denoise: 0.5  
+
+| Import Image | Output Image |
+|---|---|
+| <img src="https://github.com/tatookan/comfuinoda-Navyblue/blob/main/demo/IMAGE.png" alt="Sampler Example" width="500"> | <img src="https://github.com/tatookan/comfuinoda-Navyblue/blob/main/demo/M2M%26NO.png" alt="Sampler Example" width="500"> |
+
 ## Nodes
 
 ### Detail Daemon Sampler
