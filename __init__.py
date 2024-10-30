@@ -1,6 +1,6 @@
 # __init__.py
 
-from .detail_daemon_node import DetailDaemonSamplerNode, DetailDaemonGraphSigmasNode, MultiplySigmas, LyingSigmaSamplerNode
+from .detail_daemon_node import DetailDaemonSamplerNode, DetailDaemonGraphSigmasNode, MultiplySigmas, AdvancedLyingSigmaSamplerNode
 
 NODE_CLASS_MAPPINGS = {
     "DetailDaemonSamplerNode": DetailDaemonSamplerNode,
@@ -17,4 +17,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
 }
 
 __all__ = ["NODE_CLASS_MAPPINGS"]
-
