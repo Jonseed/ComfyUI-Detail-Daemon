@@ -1,7 +1,7 @@
 ![DetailDaemon-example](https://github.com/user-attachments/assets/8f336c94-a4c6-426e-abe1-6a4c80a37cbb)
 # ComfyUI-Detail-Daemon
 
-A port of muerrilla's [sd-webui-Detail-Daemon](https://github.com/muerrilla/sd-webui-detail-daemon/) as a node for ComfyUI, to adjust sigmas that generally enhance details, and possibly remove unwanted bokeh or background blurring, particularly with Flux models (but also works with SDXL, SD1.5, and likely other models). If the values are taken too far it results in an oversharpened and/or HDR effect. There are four nodes here. Multiply Sigmas and Lying Sigma Sampler are also included as alternative methods of generally enhancing details.
+A port of muerrilla's [sd-webui-Detail-Daemon](https://github.com/muerrilla/sd-webui-detail-daemon/) as a node for ComfyUI, to adjust sigmas that generally enhance details, and possibly remove unwanted bokeh or background blurring, particularly with Flux models (but also works with SDXL, SD1.5, Z-Image, and likely other models). If the values are taken too far it results in an oversharpened and/or HDR effect. There are four nodes here. Multiply Sigmas and Lying Sigma Sampler are also included as alternative methods of generally enhancing details.
 
 - [**Detail Daemon Sampler**](#detail-daemon-sampler)
 - [**Detail Daemon Graph Sigmas**](#detail-daemon-graph-sigmas) (to graph the sigmas adjustment visually)
@@ -21,7 +21,7 @@ Note that Detail Daemon and Lying Sigma Sampler nodes work by default with custo
 Allows sampling with the Detail Daemon schedule adjustment, which keeps the noise levels injected the same while lowering the amount of noise removed at each step, which effectively adds detail. Detail_amounts between 0 and 1.0 work best. See muerrilla's [Detail Daemon](https://github.com/muerrilla/sd-webui-detail-daemon/) repo for full explanation of inputs and methodology. Generally speaking, large features are established in earlier steps and small details take shape in later steps. So adjusting the amount in earlier steps will affect bigger shapes, and adjusting it in later steps will influence smaller fine details. The default adjusts mostly in the middle steps.
 
 Parameters (the graphing node below can help visualize these parameters):
-- `detail_amount`: the main value that adjusts the detail in the middle of the generation process. Positive values lower the sigmas, reducing noise removed at each step, which increases detail. For Flux models, you'll probably want between 0.1–1.0 range. For SDXL models, probably less than 0.25. You can also use negative values if you want to *decrease* detail or simplify the image.
+- `detail_amount`: the main value that adjusts the detail in the middle of the generation process. Positive values lower the sigmas, reducing noise removed at each step, which increases detail. For Flux or Z-Image models, you'll probably want between 0.1–1.0 range, or higher. For SDXL models, probably less than 0.25. You can also use negative values if you want to *decrease* detail or simplify the image.
 - `start`: when do you want the adjustment to start, in a percent range from 0–1.0, 0 being the first step, 1.0 being the last step. Recommended: 0.1–0.5
 - `end`: when do you want the adjustment to end, in a percent range from 0–1.0, 0 being the first step, 1.0 being the last step. Recommended: 0.5–0.9
 - `bias`: shifts the detail_amount in the middle steps forward or back in the generation process.
@@ -64,6 +64,7 @@ Parameters:
 
 [![Screenshot 2024-10-29 134541](https://github.com/user-attachments/assets/a3d2849d-4ed0-4b5b-adca-48dcd07132ca)](https://github.com/Jonseed/ComfyUI-Detail-Daemon/blob/main/Comparing%20Detailers.json)
 
+- **Z-Image-Turbo**: the [Z-Image txt2image-DetailDaemon.json](https://github.com/Jonseed/ComfyUI-Detail-Daemon/blob/main/example_workflows/Z-Image%20txt2img-DetailDaemon.json) is an example of using Detail Daemon in a Z-Image txt2img workflow.
 - **Flux**: the [Comparing Detailers.json](https://github.com/Jonseed/ComfyUI-Detail-Daemon/blob/main/example_workflows/Comparing%20Detailers.json) workflow will allow you to compare all these various detailer nodes on the same prompt and seed.
 - **Flux img2img**: the [Flux img2img-DetailDaemon.json](https://github.com/Jonseed/ComfyUI-Detail-Daemon/blob/main/example_workflows/Flux%20img2img-DetailDaemon.json) is an example of using Detail Daemon in a Flux img2img workflow.
 - **Flux upscale**: the [Flux upscale-DetailDaemon.json](https://github.com/Jonseed/ComfyUI-Detail-Daemon/blob/main/example_workflows/Flux%20upscale-Detail%20Daemon.json) is an example of using Detail Daemon in a Flux upscale workflow.
