@@ -104,10 +104,11 @@ function createGraph(node) {
     if (node._detailDaemonGraph) return;
 
     const root = document.createElement("div");
-    root.style.cssText = "width:100%;height:250px;box-sizing:border-box;padding:4px 6px 6px;overflow:hidden;";
+    root.style.cssText = 'width:100%;min-height:200px;box-sizing:border-box;padding:6px 0;overflow:hidden;'
 
     const canvas = document.createElement("canvas");
-    canvas.style.cssText = "display:block;width:100%;height:100%;border:1px solid rgba(255,255,255,.16);border-radius:6px;background:#17191c;touch-action:none;cursor:default;";
+    canvas.style.cssText =
+      'display:block;width:100%;height:100%;border:1px solid rgba(255,255,255,.16);border-radius:6px;background:#17191c;touch-action:none;cursor:default;'
     canvas.title = "Drag the start, exponent handles, peak, and end. Double-click the graph to restore the default curve.";
     root.appendChild(canvas);
 
