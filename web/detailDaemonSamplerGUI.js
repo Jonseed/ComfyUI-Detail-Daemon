@@ -28,6 +28,31 @@ function round(value, places = 2) {
     return Math.round(value * factor) / factor;
 }
 
+function formatTooltipValue(value) {
+    return Number(value.toFixed(2)).toString();
+}
+
+function getHandleTooltip(drag, parameters) {
+    const values = {
+        start: [
+            ["start", parameters.start],
+            ["start_offset", parameters.startOffset],
+        ],
+        exponent_start: [["exponent", parameters.exponent]],
+        peak: [
+            ["detail_amount", parameters.detailAmount],
+            ["bias", parameters.bias],
+        ],
+        exponent_end: [["exponent", parameters.exponent]],
+        end: [
+            ["end", parameters.end],
+            ["end_offset", parameters.endOffset],
+        ],
+    }[drag];
+
+    return values?.map(([name, value]) => `${name}:${formatTooltipValue(value)}`).join(" / ") ?? "";
+}
+
 function findWidget(node, name) {
     return node.widgets?.find((widget) => widget.name === name);
 }
@@ -243,6 +268,37 @@ function createGraph(node) {
             }
         }
 
+        if (state.drag) {
+            const activeHandle = handles.find((handle) => handle.name === state.drag);
+            const tooltip = getHandleTooltip(state.drag, parameters);
+            if (activeHandle && tooltip) {
+                context.font = "bold 11px sans-serif";
+                const tooltipPadding = 8;
+                const tooltipHeight = 24;
+                const tooltipWidth = context.measureText(tooltip).width + tooltipPadding * 2;
+                const tooltipGap = 12;
+                const tooltipX = clamp(activeHandle.canvasX - tooltipWidth / 2, 4, width - tooltipWidth - 4);
+                let tooltipY = activeHandle.canvasY - tooltipHeight - tooltipGap;
+                if (tooltipY < 4) tooltipY = activeHandle.canvasY + tooltipGap;
+                tooltipY = clamp(tooltipY, 4, height - tooltipHeight - 4);
+
+                context.fillStyle = "rgba(8,10,12,.94)";
+                context.strokeStyle = activeHandle.color;
+                context.lineWidth = 1;
+                context.beginPath();
+                if (typeof context.roundRect === "function") context.roundRect(tooltipX, tooltipY, tooltipWidth, tooltipHeight, 5);
+                else context.rect(tooltipX, tooltipY, tooltipWidth, tooltipHeight);
+                context.fill();
+                context.stroke();
+
+                context.fillStyle = "rgba(255,255,255,.92)";
+                context.textAlign = "center";
+                context.textBaseline = "middle";
+                context.fillText(tooltip, tooltipX + tooltipWidth / 2, tooltipY + tooltipHeight / 2);
+                context.textBaseline = "alphabetic";
+            }
+        }
+
         context.fillStyle = "rgba(255,255,255,.78)";
         context.textAlign = "left";
         context.font = "12px sans-serif";
@@ -311,6 +367,7 @@ function createGraph(node) {
         state.dragYMax = state.layout.yMax;
         canvas.setPointerCapture(event.pointerId);
         canvas.style.cursor = "grabbing";
+        requestDraw();
         event.preventDefault();
         event.stopPropagation();
     });
