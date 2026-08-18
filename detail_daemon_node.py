@@ -409,6 +409,59 @@ class DetailDaemonSamplerNode:
             ),
         )
 
+
+class DetailDaemonSamplerGUINode(DetailDaemonSamplerNode):
+    DESCRIPTION = "Detail Daemon sampler with an interactive schedule graph. Drag the start, exponent, peak, and end handles to edit the sampler settings."
+    RETURN_TYPES = ("SAMPLER", "SIGMAS")
+    RETURN_NAMES = ("sampler", "sigmas")
+
+    @classmethod
+    def INPUT_TYPES(cls) -> dict:
+        sampler_inputs = DetailDaemonSamplerNode.INPUT_TYPES()["required"]
+        return {
+            "required": {
+                "sampler": sampler_inputs["sampler"],
+                "sigmas": ("SIGMAS", {"forceInput": True}),
+                **{
+                    name: input_type
+                    for name, input_type in sampler_inputs.items()
+                    if name != "sampler"
+                },
+            },
+        }
+
+    @classmethod
+    def go(
+        cls,
+        sampler: object,
+        sigmas,
+        *,
+        detail_amount,
+        start,
+        end,
+        bias,
+        exponent,
+        start_offset,
+        end_offset,
+        fade,
+        smooth,
+        cfg_scale_override,
+    ) -> tuple:
+        wrapped_sampler = DetailDaemonSamplerNode.go(
+            sampler,
+            detail_amount=detail_amount,
+            start=start,
+            end=end,
+            bias=bias,
+            exponent=exponent,
+            start_offset=start_offset,
+            end_offset=end_offset,
+            fade=fade,
+            smooth=smooth,
+            cfg_scale_override=cfg_scale_override,
+        )[0]
+        return (wrapped_sampler, sigmas)
+
 #MultiplySigmas Node
 class MultiplySigmas:
     @classmethod

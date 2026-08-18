@@ -8,8 +8,9 @@ Here is a video demo showing Detail Daemon in action, provided by [MuseMachine](
 
 # ComfyUI-Detail-Daemon
 
-A port of muerrilla's [sd-webui-Detail-Daemon](https://github.com/muerrilla/sd-webui-detail-daemon/) as a node for ComfyUI, to adjust sigmas that generally enhance details, and possibly remove unwanted bokeh or background blurring, particularly with Flux models (but also works with SDXL, SD1.5, Qwen, Z-Image, and likely other models). If the values are taken too far it results in an oversharpened and/or HDR effect. There are four nodes here. Multiply Sigmas and Lying Sigma Sampler are also included as alternative methods of generally enhancing details.
+A port of muerrilla's [sd-webui-Detail-Daemon](https://github.com/muerrilla/sd-webui-detail-daemon/) as nodes for ComfyUI, to adjust sigmas that generally enhance details and possibly remove unwanted bokeh or background blurring, particularly with Flux models (but also works with SDXL, SD1.5, Qwen, Z-Image, and likely other models). If the values are taken too far it results in an oversharpened and/or HDR effect. There are five nodes here, including an interactive sampler GUI. Multiply Sigmas and Lying Sigma Sampler are also included as alternative methods of generally enhancing details.
 
+- [**Detail Daemon Sampler GUI**](#detail-daemon-sampler-gui) (sampler and interactive schedule graph in one node)
 - [**Detail Daemon Sampler**](#detail-daemon-sampler)
 - [**Detail Daemon Graph Sigmas**](#detail-daemon-graph-sigmas) (to graph the sigmas adjustment visually)
 - [**Multiply Sigmas**](#multiply-sigmas) (stateless)
@@ -38,6 +39,25 @@ Parameters (the graphing node below can help visualize these parameters):
 - `fade`: reduce the entire adjustment curve by a particular value.
 - `smooth`: (true/false), do you want the adjustment curve to be smooth or not.
 - `cfg_scale_override`: if set to 0 (default), the sampler will automatically determine the CFG scale (if possible). Set to some other value to override (should probably match the CFG used in your workflow).
+
+### Detail Daemon Sampler GUI
+
+<img width="630" height="866" alt="image" src="https://github.com/user-attachments/assets/ce6feab8-9d96-4055-b6aa-5e203dd825f6" />
+
+Combines the Detail Daemon sampler with a live, interactive schedule graph. Connect both `sampler` and `sigmas`; the node outputs the wrapped sampler followed by the unchanged sigmas.
+
+- Drag the blue start handle to edit `start` and `start_offset`.
+- Drag either purple `E` handle vertically to edit `exponent`; both handles stay synchronized.
+- Drag the yellow peak handle to edit `bias` and `detail_amount`.
+- Drag the red end handle to edit `end` and `end_offset`.
+- Editing any numeric widget redraws the graph immediately.
+- Double-click the graph to reset the curve controls to their defaults.
+
+The horizontal axis is normalized from 0% to 100%, so the graph is usable before queueing and remains independent of the workflow's actual step count. Graph state is derived from the node widgets and is preserved by normal ComfyUI workflow serialization.
+
+Interactive demo:
+
+https://github.com/user-attachments/assets/5d6b5797-7797-4995-b7ac-56b799f41751
 
 ### Detail Daemon Graph Sigmas
 
